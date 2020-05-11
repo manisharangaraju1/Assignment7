@@ -12,6 +12,23 @@ async function list() {
     return product;
   }
 
+  async function getProductCount(_) {
+    const db = getDatabase();
+    const results = await db.collection('products').aggregate([
+      {
+        $group: {
+          _id: null,
+          count: { $sum: 1 },
+        },
+      },
+    ]).toArray();
+    let count;
+    results.forEach((result)=> {
+      count = result.count;
+    })
+    return count;
+  }
+
   async function add(_, { product }) {
     const db = getDatabase();  
     const newProduct = { ...product };
@@ -34,4 +51,5 @@ async function list() {
     return savedIssue;
   }
 
-  module.exports = { getProduct, list, add, remove, update};
+
+  module.exports = { getProduct, list, add, remove, update, getProductCount};

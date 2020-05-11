@@ -15,14 +15,12 @@ export default class ProductAdd extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    console.log(this);
-    console.log(this.name.current.value);
     const { createProduct } = this.props;
     createProduct({
-      Name: this.name.current.value,
-      Price: this.price.current.value,
-      Category: this.category.current.value,
-      Image: this.price.current.value,
+      Name: this.name.value,
+      Price: parseFloat((this.price.value).slice(1)),
+      Category: this.category.value,
+      Image: this.price.value,
 
     });
   }
@@ -34,26 +32,26 @@ export default class ProductAdd extends React.Component {
           <FormGroup>
             <ControlLabel>Name:</ControlLabel>
             {' '}
-            <FormControl ref={this.name} type="text" name="name" placeholder="Name" />
+            <FormControl inputRef={(node) => { this.name = node; }} type="text" name="name" placeholder="Name" />
           </FormGroup>
           {' '}
           <FormGroup>
             <ControlLabel>Price</ControlLabel>
             {' '}
-            <FormControl ref={this.price} type="text" name="price" defaultValue="$" />
+            <FormControl inputRef={(node) => { this.price = node; }} type="text" name="price" defaultValue="$" />
           </FormGroup>
           {' '}
           <hr />
           <FormGroup>
             <ControlLabel>Image URL</ControlLabel>
             {' '}
-            <FormControl ref={this.image} type="text" name="image" placeholder="Image" />
+            <FormControl inputRef={(node) => { this.image = node; }} type="text" name="image" placeholder="Image" />
           </FormGroup>
           {' '}
           <FormGroup>
             <ControlLabel>Category</ControlLabel>
             <FormControl
-              ref={this.category}
+              inputRef={(node) => { this.category = node; }}
               componentClass="select"
             >
               <option value="Shirts">Shirts</option>

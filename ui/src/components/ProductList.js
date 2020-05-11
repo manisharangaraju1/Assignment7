@@ -1,3 +1,4 @@
+/* eslint-disable react/destructuring-assignment */
 import React from 'react';
 import { Label, Panel } from 'react-bootstrap';
 import ProductTable from './ProductTable';
@@ -7,7 +8,7 @@ import graphQLFetch from './graphQlFetch';
 export default class ProductList extends React.Component {
   constructor() {
     super();
-    this.state = { products: [] };
+    this.state = { products: [], productCount: 0 };
     this.createProduct = this.createProduct.bind(this);
     this.deleteProduct = this.deleteProduct.bind(this);
     this.loadData = this.loadData.bind(this);
@@ -16,7 +17,6 @@ export default class ProductList extends React.Component {
   componentDidMount() {
     this.loadData();
   }
-  // const data = await graphQLFetch(query, { id });
 
   async loadData() {
     const query = `query {
@@ -24,10 +24,16 @@ export default class ProductList extends React.Component {
             id Name Category Price Image
             }
         }`;
-
+    const productCountQuery = `query {
+      productCount
+    }`;
     const data = await graphQLFetch(query);
+    const count = await graphQLFetch(productCountQuery);
     if (data) {
       this.setState({ products: data.productList });
+    }
+    if (count) {
+      this.setState({ productCount: count.productCount });
     }
   }
 
@@ -48,21 +54,26 @@ export default class ProductList extends React.Component {
       productDelete(id: $id)
       }`;
     const data = await graphQLFetch(query, { id: index });
-    console.log(data);
     if (data && data.productDelete) {
       this.loadData();
     }
   }
 
   render() {
-    // eslint-disable-next-line react/destructuring-assignment
     const allProducts = this.state.products;
+    const count = this.state.productCount;
     return (
       <div>
         <Label>My Company MyInventory</Label>
         <Panel>
           <Panel.Heading>
-            <Panel.Title toggle>Show all available products</Panel.Title>
+            <Panel.Title toggle>
+              Show
+              {' '}
+              { count }
+              {' '}
+              available products
+            </Panel.Title>
           </Panel.Heading>
           <Panel.Body collapsible>
             <hr />
